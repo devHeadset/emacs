@@ -31,24 +31,56 @@
 (evil-mode 1)
 
 (use-package general
-  :config
-  (general-evil-setup)
+          :config
+          (general-evil-setup)
 
-  ;; set up 'SPC' as the global leader key
-  (general-create-definer ht/leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC") ;; access leader in insert mode
+          ;; set up 'SPC' as the global leader key
+          (general-create-definer ht/leader-keys
+            :states '(normal insert visual emacs)
+            :keymaps 'override
+            :prefix "SPC" ;; set leader
+            :global-prefix "M-SPC") ;; access leader in insert mode
 
-  (ht/leader-keys
-    "b" '(:ignore t :wk "buffer")
-    "bb" '(switch-to-buffer :wk "Switch buffer")
-    "bk" '(kill-this-buffer :wk "Kill this buffer")
-    "bn" '(next-buffer :wk "Next buffer")
-    "bp" '(previous-buffer :wk "Previous buffer")
-    "br" '(revert-buffer :wk "Reload buffer"))
-    "bi"  '(ibuffer :wk "Ibuffer")
+          (ht/leader-keys
+            "b" '(:ignore t :wk "buffer")
+            "bb" '(switch-to-buffer :wk "Switch buffer")
+            "bk" '(kill-this-buffer :wk "Kill this buffer")
+            "bn" '(next-buffer :wk "Next buffer")
+            "bp" '(previous-buffer :wk "Previous buffer")
+            "br" '(revert-buffer :wk "Reload buffer"))
+            "bi"  '(ibuffer :wk "Ibuffer")
+
+ (ht/leader-keys
+  "." '(find-file :wk "Find file")
+  "f c" '((lambda () (interactive) (find-file "~/.emacs.d/config.org")) :wk "Edit emacs config")
+  "TAB TAB" '(comment-line :wk "Comment lines"))
+
+
+
+ (dt/leader-keys
+  "h" '(:ignore t :wk "Help")
+  "h f" '(describe-function :wk "Describe function")
+  "h v" '(describe-variable :wk "Describe variable")
+  ;;"h r r" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
+  "h r r" '(reload-init-file :wk "Reload emacs config"))
+
+ (ht/leader-keys
+  "t" '(:ignore t :wk "Toggle")
+  "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+  "t t" '(visual-line-mode :wk "Toggle truncated lines"))
+
+ (ht/leader-keys
+  "h" '(:ignore t :wk "Help")
+  "h f" '(describe-function :wk "Describe function")
+  "h v" '(describe-variable :wk "Describe variable")
+  "h r r" '(reload-init-file :wk "Reload emacs config"))
+
+ (ht/leader-keys
+  "t" '(:ignore t :wk "Toggle")
+  "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+  "t t" '(visual-line-mode :wk "Toggle truncated lines"))
+
+
 )
 
 (use-package catppuccin-theme)
