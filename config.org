@@ -7,8 +7,9 @@
 * TOC :toc:
 - [[#interface-customization][Interface Customization]]
 - [[#font-setup][Font Setup]]
+  - [[#zooming-in--out][Zooming In & Out]]
 - [[#package-initialization][Package Initialization]]
-- [[#use-package-initialization][Use-Package Initialization]]
+  - [[#use-package-initialization][Use-Package Initialization]]
 - [[#evil-mode-setup][Evil Mode Setup]]
 - [[#keybindings-with-general][Keybindings with General]]
 - [[#reload-emacs][Reload emacs]]
@@ -37,6 +38,15 @@ To set the default font to JetBrains Mono Nerd Font:
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
 #+END_SRC
 
+
+** Zooming In & Out
+#+begin_src emacs-lisp 
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
+(global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+#+end_src
+
 * Package Initialization
 Initializing package sources:
 
@@ -53,7 +63,7 @@ Initializing package sources:
   (package-refresh-contents))
 #+END_SRC
 
-* Use-Package Initialization
+** Use-Package Initialization
 Set up use-package for package management:
 
 #+BEGIN_SRC emacs-lisp
@@ -161,6 +171,7 @@ Adding some enhancements for Org mode:
   (use-package org-bullets)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (electric-indent-mode -1)
+(require `org-tempo)
 #+END_SRC
 
 * Which-Key Setup

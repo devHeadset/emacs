@@ -8,6 +8,11 @@
 ;; jetbrains mono nerd font
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
 
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
+(global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+
 ;; init packages sources
 (require 'package)
 
@@ -99,6 +104,7 @@
   (use-package org-bullets)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (electric-indent-mode -1)
+(require `org-tempo)
 
 (use-package which-key
   :init
