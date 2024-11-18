@@ -1,0 +1,143 @@
+#+TITLE: My emacs config
+#+AUTHOR: Headset/ emi
+#+STARTUP: showeverything
+#+OPTIONS: toc:2
+
+
+* TOC :toc:
+- [[#interface-customization][Interface Customization]]
+- [[#font-setup][Font Setup]]
+- [[#package-initialization][Package Initialization]]
+- [[#use-package-initialization][Use-Package Initialization]]
+- [[#evil-mode-setup][Evil Mode Setup]]
+- [[#keybindings-with-general][Keybindings with General]]
+- [[#catppuccin-theme][Catppuccin Theme]]
+- [[#org-mode-enhancements][Org Mode Enhancements]]
+- [[#which-key-setup][Which-Key Setup]]
+
+* Interface Customization
+Disabling unnecessary GUI elements and enabling line numbers:
+
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(global-display-line-numbers-mode 1)
+(global-visual-line-mode t)
+#+END_SRC
+
+
+* Font Setup
+To set the default font to JetBrains Mono Nerd Font:
+
+#+BEGIN_SRC emacs-lisp
+;; jetbrains mono nerd font
+(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
+#+END_SRC
+
+* Package Initialization
+Initializing package sources:
+
+#+BEGIN_SRC emacs-lisp
+;; init packages sources
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+#+END_SRC
+
+* Use-Package Initialization
+Set up use-package for package management:
+
+#+BEGIN_SRC emacs-lisp
+;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+#+END_SRC
+
+* Evil Mode Setup
+To enable Evil mode for Vim-like keybindings:
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil)
+(require 'evil)
+(evil-mode 1)
+#+END_SRC
+
+* Keybindings with General
+Setting up custom keybindings using =general= package:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package general
+    :config
+    (general-evil-setup)
+
+    ;; set up 'SPC' as the global leader key
+    (general-create-definer ht/leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC" ;; set leader
+      :global-prefix "M-SPC") ;; access leader in insert mode
+
+    (ht/leader-keys
+      "b" '(:ignore t :wk "buffer")
+      "bb" '(switch-to-buffer :wk "Switch buffer")
+      "bk" '(kill-this-buffer :wk "Kill this buffer")
+      "bn" '(next-buffer :wk "Next buffer")
+      "bp" '(previous-buffer :wk "Previous buffer")
+      "br" '(revert-buffer :wk "Reload buffer"))
+      "bi"  '(ibuffer :wk "Ibuffer")
+  )
+#+END_SRC
+
+* Catppuccin Theme
+The catppuccin theme for emacs
+#+BEGIN_SRC emacs-lisp
+(use-package catppuccin-theme)
+  (load-theme 'catppuccin :no-confirm)
+#+end_src
+
+* Org Mode Enhancements
+Adding some enhancements for Org mode:
+
+#+BEGIN_SRC emacs-lisp
+(use-package toc-org
+    :commands toc-org-enable
+    :init (add-hook 'org-mode-hook 'toc-org-enable))
+
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
+
+* Which-Key Setup
+Configuring which-key for displaying available keybindings:
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :init
+    (which-key-mode 1)
+  :config
+  (setq which-key-side-window-location 'bottom
+	  which-key-sort-order #'which-key-key-order-alpha
+	  which-key-sort-uppercase-first nil
+	  which-key-add-column-padding 1
+	  which-key-max-display-columns nil
+	  which-key-min-display-lines 6
+	  which-key-side-window-slot -10
+	  which-key-side-window-max-height 0.25
+	  which-key-idle-delay 0.8
+	  which-key-max-description-length 25
+	  which-key-allow-imprecise-window-fit t
+	  which-key-separator " >" ))
+#+END_SRC
+
