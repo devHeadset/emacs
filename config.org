@@ -1,5 +1,5 @@
 #+TITLE: My emacs config
-#+AUTHOR: Headset/ emi
+#+AUTHOR: Headset
 #+STARTUP: showeverything
 #+OPTIONS: toc:2
 
@@ -11,7 +11,7 @@
 - [[#use-package-initialization][Use-Package Initialization]]
 - [[#evil-mode-setup][Evil Mode Setup]]
 - [[#keybindings-with-general][Keybindings with General]]
-- [[#reload-emacs][reload emacs]]
+- [[#reload-emacs][Reload emacs]]
 - [[#catppuccin-theme][Catppuccin Theme]]
 - [[#org-mode-enhancements][Org Mode Enhancements]]
 - [[#which-key-setup][Which-Key Setup]]
@@ -132,7 +132,7 @@ Setting up custom keybindings using =general= package:
   )
 #+END_SRC
 
-* reload emacs
+* Reload emacs
 #+begin_src emacs-lisp
 (defun reload-init-file ()
   (interactive)
@@ -153,13 +153,14 @@ The catppuccin theme for emacs
 Adding some enhancements for Org mode:
 
 #+BEGIN_SRC emacs-lisp
-(use-package toc-org
-    :commands toc-org-enable
-    :init (add-hook 'org-mode-hook 'toc-org-enable))
+  (use-package toc-org
+      :commands toc-org-enable
+      :init (add-hook 'org-mode-hook 'toc-org-enable))
 
-(add-hook 'org-mode-hook 'org-indent-mode)
-(use-package org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (use-package org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(electric-indent-mode -1)
 #+END_SRC
 
 * Which-Key Setup
