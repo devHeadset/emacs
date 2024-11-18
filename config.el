@@ -57,7 +57,7 @@
 
 
 
- (dt/leader-keys
+ (ht/leader-keys
   "h" '(:ignore t :wk "Help")
   "h f" '(describe-function :wk "Describe function")
   "h v" '(describe-variable :wk "Describe variable")
@@ -82,6 +82,11 @@
 
 
 )
+
+(defun reload-init-file ()
+  (interactive)
+  (load-file user-init-file)
+  (load-file user-init-file))
 
 (use-package catppuccin-theme)
   (load-theme 'catppuccin :no-confirm)
