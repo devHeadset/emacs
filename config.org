@@ -7,18 +7,25 @@
 * TOC :toc:
 - [[#interface-customization][Interface Customization]]
 - [[#all-the-icons][ALL THE ICONS]]
+- [[#dashboard][Dashboard]]
+- [[#dired][Dired]]
+- [[#company][Company]]
 - [[#font-setup][Font Setup]]
   - [[#zooming-in--out][Zooming In & Out]]
 - [[#package-initialization][Package Initialization]]
   - [[#use-package-initialization][Use-Package Initialization]]
 - [[#evil-mode-setup][Evil Mode Setup]]
 - [[#keybindings-with-general][Keybindings with General]]
+- [[#transparency][Transparency]]
 - [[#reload-emacs][Reload emacs]]
 - [[#catppuccin-theme][Catppuccin Theme]]
+- [[#programming-langs][Programming langs]]
 - [[#org-mode-enhancements][Org Mode Enhancements]]
 - [[#ivy][Ivy]]
 - [[#which-key-setup][Which-Key Setup]]
 - [[#sudo-edit][Sudo Edit]]
+- [[#prevent-save-files][Prevent save files]]
+- [[#modeline][Modeline]]
 
 * Interface Customization
 Disabling unnecessary GUI elements and enabling line numbers:
@@ -43,7 +50,74 @@ Disabling unnecessary GUI elements and enabling line numbers:
 
 #+end_src
 
+* Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+  :ensure t 
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+  (setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 3)
+                          (projects . 3)
+                          (registers . 3)))
+  :custom
+  (dashboard-modify-heading-icons '((recents . "file-text")
+                                    (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src
 
+
+* Dired
+#+begin_src emacs-lisp
+(use-package dired-open
+  :config
+  (setq dired-open-extensions '(("gif" . "sxiv")
+                                ("jpg" . "sxiv")
+                                ("png" . "sxiv")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv"))))
+
+(use-package peep-dired
+  :after dired
+  :hook (evil-normalize-keymaps . peep-dired-hook)
+  :config
+    (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+    (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
+    (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+    (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
+)
+
+;;(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+
+#+end_src
+
+* Company
+#+begin_src emacs-lisp
+(use-package company
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+
+(use-package company-box
+  :after company
+  :diminish
+  :hook (company-mode . company-box-mode))
+
+
+#+end_src
 * Font Setup
 To set the default font to JetBrains Mono Nerd Font:
 
@@ -121,7 +195,6 @@ Setting up custom keybindings using =general= package:
             "bp" '(previous-buffer :wk "Previous buffer")
             "br" '(revert-buffer :wk "Reload buffer"))
             "bi"  '(ibuffer :wk "Ibuffer")
-
  (ht/leader-keys
   "." '(find-file :wk "Find file")
   "f c" '((lambda () (interactive) (find-file "~/.emacs.d/config.org")) :wk "Edit emacs config")
@@ -139,7 +212,9 @@ Setting up custom keybindings using =general= package:
  (ht/leader-keys
   "t" '(:ignore t :wk "Toggle")
   "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
-  "t t" '(visual-line-mode :wk "Toggle truncated lines"))
+  "t t" '(visual-line-mode :wk "Toggle truncated lines")
+  "t e" '(term :wk "Terminal"))
+
 
  (ht/leader-keys
   "h" '(:ignore t :wk "Help")
@@ -156,6 +231,11 @@ Setting up custom keybindings using =general= package:
 )
 #+END_SRC
 
+* Transparency
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
+
+#+end_src
 * Reload emacs
 #+begin_src emacs-lisp
 (defun reload-init-file ()
@@ -165,12 +245,16 @@ Setting up custom keybindings using =general= package:
 
 #+end_src
 
-
 * Catppuccin Theme
 The catppuccin theme for emacs
 #+BEGIN_SRC emacs-lisp
 (use-package catppuccin-theme)
   (load-theme 'catppuccin :no-confirm)
+#+end_src
+
+* Programming langs
+#+begin_src emacs-lisp
+
 #+end_src
 
 * Org Mode Enhancements
@@ -258,5 +342,23 @@ Sudo edit gives you sudo perms when using emacs.
       "fU" '(sudo-edit :wk "Sudo edit file")))
 #+end_src
 
+* Prevent save files
+#+begin_src emacs-lisp
+(setq make-backup-files nil)
+
+#+end_src
 
 
+* Modeline
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-height 35      ;; sets modeline height
+        doom-modeline-bar-width 5    ;; sets right bar width
+        doom-modeline-persp-name t   ;; adds perspective name to modeline
+        doom-modeline-persp-icon t)) ;; adds folder icon next to persp name
+
+
+#+end_src

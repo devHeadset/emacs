@@ -12,6 +12,62 @@
 (use-package all-the-icons-dired
   :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
 
+(use-package dashboard
+:ensure t 
+:init
+(setq initial-buffer-choice 'dashboard-open)
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
+(setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+(setq dashboard-center-content nil) ;; set to 't' for centered content
+(setq dashboard-items '((recents . 5)
+                        (agenda . 5 )
+                        (bookmarks . 3)
+                        (projects . 3)
+                        (registers . 3)))
+:custom
+(dashboard-modify-heading-icons '((recents . "file-text")
+                                  (bookmarks . "book")))
+:config
+(dashboard-setup-startup-hook))
+
+(use-package dired-open
+  :config
+  (setq dired-open-extensions '(("gif" . "sxiv")
+                                ("jpg" . "sxiv")
+                                ("png" . "sxiv")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv"))))
+
+(use-package peep-dired
+  :after dired
+  :hook (evil-normalize-keymaps . peep-dired-hook)
+  :config
+    (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+    (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
+    (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+    (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
+)
+
+;;(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+
+(use-package company
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+
+(use-package company-box
+  :after company
+  :diminish
+  :hook (company-mode . company-box-mode))
+
 ;; jetbrains mono nerd font
 (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
 
@@ -61,7 +117,6 @@
             "bp" '(previous-buffer :wk "Previous buffer")
             "br" '(revert-buffer :wk "Reload buffer"))
             "bi"  '(ibuffer :wk "Ibuffer")
-
  (ht/leader-keys
   "." '(find-file :wk "Find file")
   "f c" '((lambda () (interactive) (find-file "~/.emacs.d/config.org")) :wk "Edit emacs config")
@@ -79,7 +134,9 @@
  (ht/leader-keys
   "t" '(:ignore t :wk "Toggle")
   "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
-  "t t" '(visual-line-mode :wk "Toggle truncated lines"))
+  "t t" '(visual-line-mode :wk "Toggle truncated lines")
+  "t e" '(term :wk "Terminal"))
+
 
  (ht/leader-keys
   "h" '(:ignore t :wk "Help")
@@ -95,6 +152,8 @@
 
 )
 
+(add-to-list 'default-frame-alist '(alpha-background . 90)) ; For all new frames henceforth
+
 (defun reload-init-file ()
   (interactive)
   (load-file user-init-file)
@@ -102,6 +161,8 @@
 
 (use-package catppuccin-theme)
   (load-theme 'catppuccin :no-confirm)
+
+
 
 (use-package toc-org
       :commands toc-org-enable
@@ -165,3 +226,14 @@
     (ht/leader-keys
       "fu" '(sudo-edit-find-file :wk "Sudo find file")
       "fU" '(sudo-edit :wk "Sudo edit file")))
+
+(setq make-backup-files nil)
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-height 35      ;; sets modeline height
+        doom-modeline-bar-width 5    ;; sets right bar width
+        doom-modeline-persp-name t   ;; adds perspective name to modeline
+        doom-modeline-persp-icon t)) ;; adds folder icon next to persp name
